@@ -9,12 +9,12 @@ import { Mapping } from "../generated/schema"
 export function handleBridgeMappingUpdated(event: BridgeMappingUpdated): void {
   // Entities can be loaded from the store using a string ID; this ID
   // needs to be unique across all entities of the same type
-  let entity = Mapping.load(event.transaction.from.toHex())
+  let entity = Mapping.load(event.params.key)
 
   // Entities only exist after they have been saved to the store;
   // `null` checks allow to create entities on demand
   if (entity == null) {
-    entity = new Mapping(event.transaction.from.toHex())
+    entity = new Mapping(event.params.key)
   }
 
   // Entity fields can be set based on event parameters
