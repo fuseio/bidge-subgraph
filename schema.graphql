@@ -1,6 +1,10 @@
-type ExampleEntity @entity {
+type Mapping @entity {
   id: ID!
-  count: BigInt!
   key: Bytes! # bytes32
   foreignToken: Bytes! # address
+  homeToken: Bytes! # address
+  foreignBridge: Bytes! # address
+  homeBridge: Bytes! # address
+  foreignStartBlock: BigInt
+  homeStartBlock: BigInt
 }

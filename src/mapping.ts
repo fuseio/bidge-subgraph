@@ -1,31 +1,30 @@
 import { BigInt } from "@graphprotocol/graph-ts"
 import {
-  Contract,
+  BridgeMapper,
   BridgeMappingUpdated,
   EternalOwnershipTransferred
-} from "../generated/Contract/Contract"
-import { ExampleEntity } from "../generated/schema"
+} from "../generated/BridgeMapper/BridgeMapper"
+import { Mapping } from "../generated/schema"
 
 export function handleBridgeMappingUpdated(event: BridgeMappingUpdated): void {
   // Entities can be loaded from the store using a string ID; this ID
   // needs to be unique across all entities of the same type
-  let entity = ExampleEntity.load(event.transaction.from.toHex())
+  let entity = Mapping.load(event.transaction.from.toHex())
 
   // Entities only exist after they have been saved to the store;
   // `null` checks allow to create entities on demand
   if (entity == null) {
-    entity = new ExampleEntity(event.transaction.from.toHex())
-
-    // Entity fields can be set using simple assignments
-    entity.count = BigInt.fromI32(0)
+    entity = new Mapping(event.transaction.from.toHex())
   }
-
-  // BigInt and BigDecimal math are supported
-  entity.count = entity.count + BigInt.fromI32(1)
 
   // Entity fields can be set based on event parameters
   entity.key = event.params.key
   entity.foreignToken = event.params.foreignToken
+  entity.homeToken = event.params.homeToken
+  entity.foreignBridge = event.params.foreignBridge
+  entity.homeBridge = event.params.homeBridge
+  entity.foreignStartBlock = event.params.foreignStartBlock
+  entity.homeStartBlock = event.params.homeStartBlock
 
   // Entities can be written to the store with `.save()`
   entity.save()
@@ -40,23 +39,23 @@ export function handleBridgeMappingUpdated(event: BridgeMappingUpdated): void {
   // example, the contract that has emitted the event can be connected to
   // with:
   //
-  // let contract = Contract.bind(event.address)
+  // let bridgeMapper = BridgeMapper.bind(event.address)
   //
   // The following functions can then be called on this contract to access
   // state variables and other data:
   //
-  // - contract.getBridgeMapperVersion(...)
-  // - contract.foreignStartBlockByKey(...)
-  // - contract.getAddBridgeMappingHash(...)
-  // - contract.isInitialized(...)
-  // - contract.foreignBridgeByKey(...)
-  // - contract.foreignTokenByKey(...)
-  // - contract.hashedTxs(...)
-  // - contract.homeBridgeByKey(...)
-  // - contract.owner(...)
-  // - contract.initialize(...)
-  // - contract.homeStartBlockByKey(...)
-  // - contract.homeTokenByKey(...)
+  // - bridgeMapper.getBridgeMapperVersion(...)
+  // - bridgeMapper.foreignStartBlockByKey(...)
+  // - bridgeMapper.getAddBridgeMappingHash(...)
+  // - bridgeMapper.isInitialized(...)
+  // - bridgeMapper.foreignBridgeByKey(...)
+  // - bridgeMapper.foreignTokenByKey(...)
+  // - bridgeMapper.hashedTxs(...)
+  // - bridgeMapper.homeBridgeByKey(...)
+  // - bridgeMapper.owner(...)
+  // - bridgeMapper.initialize(...)
+  // - bridgeMapper.homeStartBlockByKey(...)
+  // - bridgeMapper.homeTokenByKey(...)
 }
 
 export function handleEternalOwnershipTransferred(

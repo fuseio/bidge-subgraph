@@ -79,7 +79,7 @@ export class EternalOwnershipTransferred__Params {
   }
 }
 
-export class Contract__getBridgeMapperVersionResult {
+export class BridgeMapper__getBridgeMapperVersionResult {
   value0: BigInt;
   value1: BigInt;
   value2: BigInt;
@@ -99,15 +99,15 @@ export class Contract__getBridgeMapperVersionResult {
   }
 }
 
-export class Contract extends SmartContract {
-  static bind(address: Address): Contract {
-    return new Contract("Contract", address);
+export class BridgeMapper extends SmartContract {
+  static bind(address: Address): BridgeMapper {
+    return new BridgeMapper("BridgeMapper", address);
   }
 
-  getBridgeMapperVersion(): Contract__getBridgeMapperVersionResult {
+  getBridgeMapperVersion(): BridgeMapper__getBridgeMapperVersionResult {
     let result = super.call("getBridgeMapperVersion", []);
 
-    return new Contract__getBridgeMapperVersionResult(
+    return new BridgeMapper__getBridgeMapperVersionResult(
       result[0].toBigInt(),
       result[1].toBigInt(),
       result[2].toBigInt()
@@ -115,7 +115,7 @@ export class Contract extends SmartContract {
   }
 
   try_getBridgeMapperVersion(): CallResult<
-    Contract__getBridgeMapperVersionResult
+    BridgeMapper__getBridgeMapperVersionResult
   > {
     let result = super.tryCall("getBridgeMapperVersion", []);
     if (result.reverted) {
@@ -123,7 +123,7 @@ export class Contract extends SmartContract {
     }
     let value = result.value;
     return CallResult.fromValue(
-      new Contract__getBridgeMapperVersionResult(
+      new BridgeMapper__getBridgeMapperVersionResult(
         value[0].toBigInt(),
         value[1].toBigInt(),
         value[2].toBigInt()

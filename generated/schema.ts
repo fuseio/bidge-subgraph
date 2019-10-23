@@ -12,7 +12,7 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class ExampleEntity extends Entity {
+export class Mapping extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -20,17 +20,17 @@ export class ExampleEntity extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id !== null, "Cannot save ExampleEntity entity without an ID");
+    assert(id !== null, "Cannot save Mapping entity without an ID");
     assert(
       id.kind == ValueKind.STRING,
-      "Cannot save ExampleEntity entity with non-string ID. " +
+      "Cannot save Mapping entity with non-string ID. " +
         'Considering using .toHex() to convert the "id" to a string.'
     );
-    store.set("ExampleEntity", id.toString(), this);
+    store.set("Mapping", id.toString(), this);
   }
 
-  static load(id: string): ExampleEntity | null {
-    return store.get("ExampleEntity", id) as ExampleEntity | null;
+  static load(id: string): Mapping | null {
+    return store.get("Mapping", id) as Mapping | null;
   }
 
   get id(): string {
@@ -40,15 +40,6 @@ export class ExampleEntity extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
-  }
-
-  get count(): BigInt {
-    let value = this.get("count");
-    return value.toBigInt();
-  }
-
-  set count(value: BigInt) {
-    this.set("count", Value.fromBigInt(value));
   }
 
   get key(): Bytes {
@@ -67,5 +58,66 @@ export class ExampleEntity extends Entity {
 
   set foreignToken(value: Bytes) {
     this.set("foreignToken", Value.fromBytes(value));
+  }
+
+  get homeToken(): Bytes {
+    let value = this.get("homeToken");
+    return value.toBytes();
+  }
+
+  set homeToken(value: Bytes) {
+    this.set("homeToken", Value.fromBytes(value));
+  }
+
+  get foreignBridge(): Bytes {
+    let value = this.get("foreignBridge");
+    return value.toBytes();
+  }
+
+  set foreignBridge(value: Bytes) {
+    this.set("foreignBridge", Value.fromBytes(value));
+  }
+
+  get homeBridge(): Bytes {
+    let value = this.get("homeBridge");
+    return value.toBytes();
+  }
+
+  set homeBridge(value: Bytes) {
+    this.set("homeBridge", Value.fromBytes(value));
+  }
+
+  get foreignStartBlock(): BigInt | null {
+    let value = this.get("foreignStartBlock");
+    if (value === null) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set foreignStartBlock(value: BigInt | null) {
+    if (value === null) {
+      this.unset("foreignStartBlock");
+    } else {
+      this.set("foreignStartBlock", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get homeStartBlock(): BigInt | null {
+    let value = this.get("homeStartBlock");
+    if (value === null) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set homeStartBlock(value: BigInt | null) {
+    if (value === null) {
+      this.unset("homeStartBlock");
+    } else {
+      this.set("homeStartBlock", Value.fromBigInt(value as BigInt));
+    }
   }
 }
