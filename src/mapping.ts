@@ -1,21 +1,34 @@
-import { BigInt } from "@graphprotocol/graph-ts"
 import {
-  BridgeMapper,
   BridgeMappingUpdated,
   EternalOwnershipTransferred
 } from "../generated/BridgeMapper/BridgeMapper"
-import { Mapping } from "../generated/schema"
+import { Token as TokenContract, HomeBridgeErcToErc as HomeBridgeErcToErcContract } from "../generated/templates"
+import { UserRequestForSignature, CollectedSignatures } from "../generated/templates/HomeBridgeErcToErc/HomeBridgeErcToErc"
+// import {  } from "../generated/templates/HomeBridgeErcToErc/"
+import { BridgeMapping, Token, HomeBridgeErcToErc, CollectedSignaturesEvent, UserRequestForSignatureEvent } from "../generated/schema"
+// import { log } from '@graphprotocol/graph-ts'
 
 export function handleBridgeMappingUpdated(event: BridgeMappingUpdated): void {
   // Entities can be loaded from the store using a string ID; this ID
   // needs to be unique across all entities of the same type
-  let entity = Mapping.load(event.params.key.toHex())
+  let entity = BridgeMapping.load(event.params.key.toHex())
 
   // Entities only exist after they have been saved to the store;
   // `null` checks allow to create entities on demand
   if (entity == null) {
-    entity = new Mapping(event.params.key.toHex())
+    entity = new BridgeMapping(event.params.key.toHex())
+    TokenContract.create(event.params.homeToken)
+    HomeBridgeErcToErcContract.create(event.params.homeBridge)
   }
+
+  const homeToken = new Token(event.params.homeToken.toHexString()) as Token
+  homeToken.address = event.params.homeToken
+  homeToken.save()
+
+  const homeBridge = new HomeBridgeErcToErc(event.params.homeBridge.toHexString())
+  homeBridge.address = event.params.homeBridge
+  homeBridge.tokenAddress = event.params.homeToken
+  homeBridge.save()
 
   // Entity fields can be set based on event parameters
   entity.key = event.params.key
@@ -25,9 +38,13 @@ export function handleBridgeMappingUpdated(event: BridgeMappingUpdated): void {
   entity.homeBridge = event.params.homeBridge
   entity.foreignStartBlock = event.params.foreignStartBlock
   entity.homeStartBlock = event.params.homeStartBlock
+  entity.blockNumber = event.block.number
+  entity.txHash = event.transaction.hash
 
   // Entities can be written to the store with `.save()`
   entity.save()
+
+
 
   // Note: If a handler doesn't require existing field values, it is faster
   // _not_ to load the entity from the store. Instead, create it fresh with
@@ -61,3 +78,41 @@ export function handleBridgeMappingUpdated(event: BridgeMappingUpdated): void {
 export function handleEternalOwnershipTransferred(
   event: EternalOwnershipTransferred
 ): void {}
+
+// export function handleTransfer(event: Transfer): void {
+
+// }
+
+export function handleUserRequestForSignature(event: UserRequestForSignature): void {
+  let key = event.transaction.hash.toHexString() + '_' + event.transactionLogIndex.toString() as string
+  let entity = UserRequestForSignatureEvent.load(key)
+
+  if (entity == null) {
+    entity = new UserRequestForSignatureEvent(key)
+  }
+  
+  entity.txHash = event.transaction.hash
+  entity.blockNumber = event.block.number
+  entity.recipient = event.params.recipient
+  entity.value = event.params.value
+
+  entity.save()
+
+}
+
+export function handleCollectedSignatures(event: CollectedSignatures): void {
+  let key = event.transaction.hash.toHexString() + '_' + event.transactionLogIndex.toString() as string
+  let entity = CollectedSignaturesEvent.load(key)
+
+  if (entity == null) {
+    entity = new CollectedSignaturesEvent(key)
+  }
+  
+  entity.txHash = event.transaction.hash
+  entity.blockNumber = event.block.number
+  entity.authorityResponsibleForRelay = event.params.authorityResponsibleForRelay
+  entity.messageHash = event.params.messageHash
+  entity.numberOfCollectedSignatures = event.params.NumberOfCollectedSignatures
+
+  entity.save()
+}

@@ -12,7 +12,7 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class Mapping extends Entity {
+export class BridgeMapping extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -20,17 +20,17 @@ export class Mapping extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id !== null, "Cannot save Mapping entity without an ID");
+    assert(id !== null, "Cannot save BridgeMapping entity without an ID");
     assert(
       id.kind == ValueKind.STRING,
-      "Cannot save Mapping entity with non-string ID. " +
+      "Cannot save BridgeMapping entity with non-string ID. " +
         'Considering using .toHex() to convert the "id" to a string.'
     );
-    store.set("Mapping", id.toString(), this);
+    store.set("BridgeMapping", id.toString(), this);
   }
 
-  static load(id: string): Mapping | null {
-    return store.get("Mapping", id) as Mapping | null;
+  static load(id: string): BridgeMapping | null {
+    return store.get("BridgeMapping", id) as BridgeMapping | null;
   }
 
   get id(): string {
@@ -119,5 +119,511 @@ export class Mapping extends Entity {
     } else {
       this.set("homeStartBlock", Value.fromBigInt(value as BigInt));
     }
+  }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    return value.toBigInt();
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
+  }
+
+  get txHash(): Bytes {
+    let value = this.get("txHash");
+    return value.toBytes();
+  }
+
+  set txHash(value: Bytes) {
+    this.set("txHash", Value.fromBytes(value));
+  }
+}
+
+export class Token extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save Token entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save Token entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("Token", id.toString(), this);
+  }
+
+  static load(id: string): Token | null {
+    return store.get("Token", id) as Token | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get address(): Bytes {
+    let value = this.get("address");
+    return value.toBytes();
+  }
+
+  set address(value: Bytes) {
+    this.set("address", Value.fromBytes(value));
+  }
+
+  get symbol(): string | null {
+    let value = this.get("symbol");
+    if (value === null) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set symbol(value: string | null) {
+    if (value === null) {
+      this.unset("symbol");
+    } else {
+      this.set("symbol", Value.fromString(value as string));
+    }
+  }
+
+  get name(): string | null {
+    let value = this.get("name");
+    if (value === null) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set name(value: string | null) {
+    if (value === null) {
+      this.unset("name");
+    } else {
+      this.set("name", Value.fromString(value as string));
+    }
+  }
+
+  get decimals(): string | null {
+    let value = this.get("decimals");
+    if (value === null) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set decimals(value: string | null) {
+    if (value === null) {
+      this.unset("decimals");
+    } else {
+      this.set("decimals", Value.fromString(value as string));
+    }
+  }
+}
+
+export class HomeBridgeErcToErc extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save HomeBridgeErcToErc entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save HomeBridgeErcToErc entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("HomeBridgeErcToErc", id.toString(), this);
+  }
+
+  static load(id: string): HomeBridgeErcToErc | null {
+    return store.get("HomeBridgeErcToErc", id) as HomeBridgeErcToErc | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get address(): Bytes {
+    let value = this.get("address");
+    return value.toBytes();
+  }
+
+  set address(value: Bytes) {
+    this.set("address", Value.fromBytes(value));
+  }
+
+  get tokenAddress(): Bytes {
+    let value = this.get("tokenAddress");
+    return value.toBytes();
+  }
+
+  set tokenAddress(value: Bytes) {
+    this.set("tokenAddress", Value.fromBytes(value));
+  }
+
+  get owner(): Bytes | null {
+    let value = this.get("owner");
+    if (value === null) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set owner(value: Bytes | null) {
+    if (value === null) {
+      this.unset("owner");
+    } else {
+      this.set("owner", Value.fromBytes(value as Bytes));
+    }
+  }
+
+  get validatorContract(): Bytes | null {
+    let value = this.get("validatorContract");
+    if (value === null) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set validatorContract(value: Bytes | null) {
+    if (value === null) {
+      this.unset("validatorContract");
+    } else {
+      this.set("validatorContract", Value.fromBytes(value as Bytes));
+    }
+  }
+
+  get dailyLimit(): BigInt | null {
+    let value = this.get("dailyLimit");
+    if (value === null) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set dailyLimit(value: BigInt | null) {
+    if (value === null) {
+      this.unset("dailyLimit");
+    } else {
+      this.set("dailyLimit", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get maxPerTx(): BigInt | null {
+    let value = this.get("maxPerTx");
+    if (value === null) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set maxPerTx(value: BigInt | null) {
+    if (value === null) {
+      this.unset("maxPerTx");
+    } else {
+      this.set("maxPerTx", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get minPerTx(): BigInt | null {
+    let value = this.get("minPerTx");
+    if (value === null) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set minPerTx(value: BigInt | null) {
+    if (value === null) {
+      this.unset("minPerTx");
+    } else {
+      this.set("minPerTx", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get homeGasPrice(): BigInt | null {
+    let value = this.get("homeGasPrice");
+    if (value === null) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set homeGasPrice(value: BigInt | null) {
+    if (value === null) {
+      this.unset("homeGasPrice");
+    } else {
+      this.set("homeGasPrice", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get requiredBlockConfirmations(): BigInt | null {
+    let value = this.get("requiredBlockConfirmations");
+    if (value === null) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set requiredBlockConfirmations(value: BigInt | null) {
+    if (value === null) {
+      this.unset("requiredBlockConfirmations");
+    } else {
+      this.set("requiredBlockConfirmations", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get foreignDailyLimit(): BigInt | null {
+    let value = this.get("foreignDailyLimit");
+    if (value === null) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set foreignDailyLimit(value: BigInt | null) {
+    if (value === null) {
+      this.unset("foreignDailyLimit");
+    } else {
+      this.set("foreignDailyLimit", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get foreignMaxPerTx(): BigInt | null {
+    let value = this.get("foreignMaxPerTx");
+    if (value === null) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set foreignMaxPerTx(value: BigInt | null) {
+    if (value === null) {
+      this.unset("foreignMaxPerTx");
+    } else {
+      this.set("foreignMaxPerTx", Value.fromBigInt(value as BigInt));
+    }
+  }
+}
+
+export class Transfer extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save Transfer entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save Transfer entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("Transfer", id.toString(), this);
+  }
+
+  static load(id: string): Transfer | null {
+    return store.get("Transfer", id) as Transfer | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get tx(): Bytes {
+    let value = this.get("tx");
+    return value.toBytes();
+  }
+
+  set tx(value: Bytes) {
+    this.set("tx", Value.fromBytes(value));
+  }
+}
+
+export class UserRequestForSignatureEvent extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id !== null,
+      "Cannot save UserRequestForSignatureEvent entity without an ID"
+    );
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save UserRequestForSignatureEvent entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("UserRequestForSignatureEvent", id.toString(), this);
+  }
+
+  static load(id: string): UserRequestForSignatureEvent | null {
+    return store.get(
+      "UserRequestForSignatureEvent",
+      id
+    ) as UserRequestForSignatureEvent | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get txHash(): Bytes {
+    let value = this.get("txHash");
+    return value.toBytes();
+  }
+
+  set txHash(value: Bytes) {
+    this.set("txHash", Value.fromBytes(value));
+  }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    return value.toBigInt();
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
+  }
+
+  get recipient(): Bytes {
+    let value = this.get("recipient");
+    return value.toBytes();
+  }
+
+  set recipient(value: Bytes) {
+    this.set("recipient", Value.fromBytes(value));
+  }
+
+  get value(): BigInt {
+    let value = this.get("value");
+    return value.toBigInt();
+  }
+
+  set value(value: BigInt) {
+    this.set("value", Value.fromBigInt(value));
+  }
+}
+
+export class CollectedSignaturesEvent extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id !== null,
+      "Cannot save CollectedSignaturesEvent entity without an ID"
+    );
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save CollectedSignaturesEvent entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("CollectedSignaturesEvent", id.toString(), this);
+  }
+
+  static load(id: string): CollectedSignaturesEvent | null {
+    return store.get(
+      "CollectedSignaturesEvent",
+      id
+    ) as CollectedSignaturesEvent | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get txHash(): Bytes {
+    let value = this.get("txHash");
+    return value.toBytes();
+  }
+
+  set txHash(value: Bytes) {
+    this.set("txHash", Value.fromBytes(value));
+  }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    return value.toBigInt();
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
+  }
+
+  get authorityResponsibleForRelay(): Bytes {
+    let value = this.get("authorityResponsibleForRelay");
+    return value.toBytes();
+  }
+
+  set authorityResponsibleForRelay(value: Bytes) {
+    this.set("authorityResponsibleForRelay", Value.fromBytes(value));
+  }
+
+  get messageHash(): Bytes {
+    let value = this.get("messageHash");
+    return value.toBytes();
+  }
+
+  set messageHash(value: Bytes) {
+    this.set("messageHash", Value.fromBytes(value));
+  }
+
+  get numberOfCollectedSignatures(): BigInt {
+    let value = this.get("numberOfCollectedSignatures");
+    return value.toBigInt();
+  }
+
+  set numberOfCollectedSignatures(value: BigInt) {
+    this.set("numberOfCollectedSignatures", Value.fromBigInt(value));
   }
 }

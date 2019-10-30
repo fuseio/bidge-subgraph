@@ -1,7 +1,7 @@
 specVersion: 0.0.2
 repository: https://github.com/fuseio/bridge-subgraph
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum/contract
     name: BridgeMapper
@@ -18,13 +18,13 @@ dataSources:
         - EternalOwnershipTransferred
       abis:
         - name: BridgeMapper
-          file: ./abis/BridgeMapper.json
+          file: BridgeMapper/abis/BridgeMapper.json
       eventHandlers:
         - event: BridgeMappingUpdated(bytes32,address,address,address,address,uint256,uint256)
           handler: handleBridgeMappingUpdated
         - event: EternalOwnershipTransferred(address,address)
           handler: handleEternalOwnershipTransferred
-      file: ./src/mapping.ts
+      file: BridgeMapper/BridgeMapper.wasm
 templates:
   - kind: ethereum/contract
     name: Token
@@ -35,12 +35,12 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.3
       language: wasm/assemblyscript
-      file: ./src/mapping.ts
+      file: templates/Token/Token.wasm
       entities:
         - Token
       abis:
         - name: Token
-          file: ./abis/BasicToken.json
+          file: Token/abis/BasicToken.json
   - kind: ethereum/contract
     name: HomeBridgeErcToErc
     network: fuse
@@ -50,12 +50,12 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.3
       language: wasm/assemblyscript
-      file: ./src/mapping.ts
+      file: templates/HomeBridgeErcToErc/HomeBridgeErcToErc.wasm
       entities:
         - HomeBridgeErcToErc
       abis:
         - name: HomeBridgeErcToErc
-          file: ./abis/HomeBridgeErcToErc.json
+          file: HomeBridgeErcToErc/abis/HomeBridgeErcToErc.json
       eventHandlers:
         - event: UserRequestForSignature(address,uint256)
           handler: handleUserRequestForSignature
