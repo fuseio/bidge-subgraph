@@ -57,7 +57,7 @@ templates:
         - name: HomeBridgeErcToErc
           file: ./abis/HomeBridgeErcToErc.json
       eventHandlers:
-        - event: UserRequestForSignature(address,uint256)
+        - event: UserRequestForSignature(address,uint256,bytes)
           handler: handleUserRequestForSignature
         - event: CollectedSignatures(address,bytes32,uint256)
           handler: handleCollectedSignatures

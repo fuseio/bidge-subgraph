@@ -46,6 +46,9 @@ type UserRequestForSignatureEvent @entity {
   blockNumber: BigInt!
   recipient: Bytes!
   value: BigInt!
+  data: Bytes
+  bridgeAddress: Bytes!
+  tokenAddress: String!
 }
 
 type CollectedSignaturesEvent @entity {
@@ -55,4 +58,5 @@ type CollectedSignaturesEvent @entity {
   authorityResponsibleForRelay: Bytes!
   messageHash: Bytes!
   numberOfCollectedSignatures: BigInt!
+  bridgeAddress: Bytes!
 }

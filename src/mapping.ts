@@ -90,12 +90,14 @@ export function handleUserRequestForSignature(event: UserRequestForSignature): v
   if (entity == null) {
     entity = new UserRequestForSignatureEvent(key)
   }
-  
+
   entity.txHash = event.transaction.hash
   entity.blockNumber = event.block.number
   entity.recipient = event.params.recipient
   entity.value = event.params.value
-
+  entity.data = event.params.data
+  entity.bridgeAddress = event.address
+  entity.tokenAddress = event.transaction.to.toHexString()
   entity.save()
 
 }
@@ -113,6 +115,7 @@ export function handleCollectedSignatures(event: CollectedSignatures): void {
   entity.authorityResponsibleForRelay = event.params.authorityResponsibleForRelay
   entity.messageHash = event.params.messageHash
   entity.numberOfCollectedSignatures = event.params.NumberOfCollectedSignatures
+  entity.bridgeAddress = event.address
 
   entity.save()
 }
